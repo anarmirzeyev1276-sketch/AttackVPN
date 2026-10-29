@@ -1,0 +1,32 @@
+name: AttackVPN Web Build & Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Files
+        run: |
+          echo "Building AttackVPN Web Dashboard..."
+          if [ -f "index.html" ]; then
+            echo "index.html tapıldı, hər şey qaydasındadır!"
+          else
+            echo "XƏTA: index.html tapılmadı!"
+            exit 1
+          fi
+
+      - name: Deploy / Artifact Save
+        uses: actions/upload-artifact@v4
+        with:
+          name: attackvpn-dashboard
+          path: .
+          
