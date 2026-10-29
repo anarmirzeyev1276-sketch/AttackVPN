@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
+    <style>
+        :root {
+            --bg-color: #0a0d14;
+            --card-bg: #121824;
+            --primary-neon: #00ffcc;
+            --danger-neon: #ff0055;
+            --text-color: #e0e6ed;
+            --text-dim: #7a8b9e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 204, 0.1);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box img {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid var(--primary-neon);
+        }
+
+        .logo-box h1 {
+            font-size: 1.2rem;
+            color: var(--primary-neon);
+            letter-spacing: 1px;
+        }
+
+        .lang-select {
+            background: #1a2332;
+            color: var(--text-color);
+            border: 1px solid var(--primary-neon);
+            padding: 8px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .status-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .power-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: transparent;
+            border: 4px solid var(--danger-neon);
+            color: var(--danger-neon);
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2);
+        }
+
+        .power-btn.active {
+            border-color: var(--primary-neon);
+            color: var(--primary-neon);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.4);
+        }
+
+        .modules-grid {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .module-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .module-item:last-child {
+            border-bottom: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #2a3547;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-neon);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-box">
+            <img src="logo.jpg" alt="AttackVPN Logo" onerror="this.src='https://via.placeholder.com/45/00ffcc/000000?text=VPN'">
+            <h1>AttackVPN</h1>
+        </div>
+        <select class="lang-select" id="languageSelect" onchange="changeLanguage(this.value)">
+            <!-- 35 DİL SEÇİMİ -->
+            <option value="az">Azərbaycan</option>
+            <option value="tr">Türkçe</option>
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+            <option value="nl">Nederlands</option>
+            <option value="pl">Polski</option>
+            <option value="uk">Українська</option>
+            <option value="ar">العربية</option>
+            <option value="fa">فارسی</option>
+            <option value="zh">中文</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="hi">हिन्दी</option>
+            <option value="id">Bahasa Indonesia</option>
+            <option value="vi">Tiếng Việt</option>
+            <option value="th">ไทย</option>
+            <option value="sv">Svenska</option>
+            <option value="no">Norsk</option>
+            <option value="da">Dansk</option>
+            <option value="fi">Suomi</option>
+            <option value="cs">Čeština</option>
+            <option value="hu">Magyar</option>
+            <option value="ro">Română</option>
+            <option value="el">Ελληνικά</option>
+            <option value="he">עברית</option>
+            <option value="ms">Bahasa Melayu</option>
+            <option value="fil">Filipino</option>
+            <option value="bg">Български</option>
+            <option value="sk">Slovenčina</option>
+            <option value="hr">Hrvatski</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <div class="status-card">
+            <p style="color: var(--text-dim); font-size: 0.9rem;" id="statusText">Status: Deaktivdir</p>
+            <button class="power-btn" id="connectBtn" onclick="toggleConnect()">QOŞ</button>
+            <p id="ipText" style="font-size: 0.85rem; color: var(--primary-neon);">Yerli Cihaz Şəbəkəsi</p>
+        </div>
+
+        <div class="modules-grid">
+            <h3 style="font-size: 1rem; color: var(--text-dim); margin-bottom: 5px;">Haker Qoruma Modulları</h3>
+
+            <div class="module-item">
+                <span>Anti-Detection Masking</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+
+            <div class="module-item">
+                <span>Multi-Hop Routing</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+
+            <div class="module-item">
+                <span>Local Device Tunneling</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+
+            <div class="module-item">
+                <span>Ping Booster (Roblox/Gaming)</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+
+            <div class="module-item">
+                <span>Deep Time HTTPS Layering</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Tag və Title Avtomatik Yaradılması
+        function generateAutoTags() {
+            document.title = "AttackVPN - Decentralized Anti-Detection Shield";
+
+            const metaDescription = document.createElement('meta');
+            metaDescription.name = "description";
+            metaDescription.content = "AttackVPN - Local Device Tunneling, Anti-Detection and Deep Time HTTPS Layering VPN System.";
+            document.head.appendChild(metaDescription);
+
+            const metaKeywords = document.createElement('meta');
+            metaKeywords.name = "keywords";
+            metaKeywords.content = "AttackVPN, Anti-Detection VPN, Roblox Ping Booster, Local Tunneling, FoCUS Ecosystem";
+            document.head.appendChild(metaKeywords);
+        }
+
+        // 2. Daxil olanda Lazımi İcazələrin İstənilməsi
+        function requestPermissions() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    console.log("Bildiriş İcazəsi:", permission);
+                });
+            }
+        }
+
+        // 3. Qoşulma düyməsi
+        let isConnected = false;
+        function toggleConnect() {
+            const btn = document.getElementById("connectBtn");
+            const status = document.getElementById("statusText");
+            isConnected = !isConnected;
+
+            if (isConnected) {
+                btn.classList.add("active");
+                btn.innerText = "SÖNDÜR";
+                status.innerText = "Status: Şifrələnib və Aktivdir";
+                status.style.color = "var(--primary-neon)";
+            } else {
+                btn.classList.remove("active");
+                btn.innerText = "QOŞ";
+                status.innerText = "Status: Deaktivdir";
+                status.style.color = "var(--text-dim)";
+            }
+        }
+
+        function changeLanguage(lang) {
+            console.log("Seçilmiş Dil:", lang);
+        }
+
+        // Başlanğıc Yüklənməsi
+        window.onload = function() {
+            generateAutoTags();
+            requestPermissions();
+        };
+    </script>
+</body>
+</html>
+          
