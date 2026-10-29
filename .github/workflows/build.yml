@@ -1,4 +1,4 @@
-name: AttackVPN Auto Release
+name: Build AttackVPN Android APK
 
 on:
   push:
@@ -7,24 +7,60 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  build-apk:
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Create Release & Upload Assets
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Cordova
+        run: |
+          npm install -g cordova
+
+      - name: Create Cordova Project & Prepare Android Platform
+        run: |
+          # Cordova layihəsi yaradırıq
+          cordova create app com.attackvpn.app AttackVPN
+          cd app
+          
+          # HTML/JS fayllarını Cordova-nın www qovluğuna kopyalayırıq
+          rm -rf www/*
+          cp -r ../* www/ 2>/dev/null || true
+          
+          # Android platformasını əlavə edirik
+          cordova platform add android
+
+      - name: Build Android APK (Unsigned Release / Debug)
+        run: |
+          cd app
+          cordova build android --debug
+
+      - name: Move APK for Release
+        run: |
+          mkdir -p output
+          cp app/platforms/android/app/build/outputs/apk/debug/app-debug.apk output/AttackVPN.apk
+
+      - name: Create GitHub Release with APK
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: "AttackVPN Release v1.0.${{ github.run_number }}"
-          body: "Avtomatik yaradılmış AttackVPN dashboard relizi. İçində 35 dil və Anti-Detection modulları mövcuddur."
-          files: |
-            index.html
-            logo.jpg
+          name: "AttackVPN Mobile Release v1.0.${{ github.run_number }}"
+          body: "Bütün Anti-Detection və Deep Time HTTPS Layering modulları ilə təchiz olunmuş rəsmi AttackVPN APK faylı."
+          files: output/AttackVPN.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
