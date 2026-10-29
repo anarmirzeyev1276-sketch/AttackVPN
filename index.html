@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05080d"><title>AttackVPN</title>
+<style>
+:root{--bg:#05080d;--card:#0b121b;--line:#15293b;--b:#00e5ff;--g:#00ff9c;--t:#d3ecf7;--m:#6f8ea3;--r:#ff3b5c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,#0a2434,var(--bg) 60%);color:var(--t);font-family:"Rajdhani","Segoe UI",system-ui,sans-serif;padding:max(10px,env(safe-area-inset-top)) 14px 28px;max-width:520px;margin:auto}
+header{display:flex;align-items:center;gap:10px;padding:6px 0 12px}
+header img{width:40px;height:40px;border-radius:10px;border:1px solid var(--b);box-shadow:0 0 12px #00e5ff55;object-fit:cover}
+h1{flex:1;margin:0;font-size:22px;letter-spacing:3px;font-weight:700}
+h1 b{color:var(--b);text-shadow:0 0 10px var(--b)}
+select,input{background:var(--card);color:var(--t);border:1px solid var(--line);border-radius:8px;padding:7px;font:inherit;max-width:120px}
+.pw{display:flex;justify-content:center;padding:18px 0 6px}
+#pbtn{width:190px;height:190px;border-radius:50%;border:2px solid var(--b);background:radial-gradient(circle,#0c2433,#060b11);color:var(--b);box-shadow:0 0 30px #00e5ff44,inset 0 0 30px #00e5ff22;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:700 17px "Rajdhani",sans-serif;letter-spacing:3px;transition:.3s;position:relative}
+#pbtn svg{width:64px;height:64px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+#pbtn.c{color:var(--g);border-color:var(--g);box-shadow:0 0 40px #00ff9c66,inset 0 0 36px #00ff9c2a;animation:pl 2s infinite}
+#pbtn.w{animation:sp 1s linear infinite;border-style:dashed}
+@keyframes pl{50%{box-shadow:0 0 62px #00ff9c99,inset 0 0 36px #00ff9c2a}}
+@keyframes sp{to{transform:rotate(360deg)}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.cell{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.cell small{display:block;color:var(--m);font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.cell span{font:600 16px ui-monospace,Menlo,monospace;color:var(--b)}
+.on span{color:var(--g)}
+.row{display:flex;gap:8px}
+.btn{flex:1;background:var(--card);border:1px solid var(--line);color:var(--t);border-radius:12px;padding:12px;font:600 16px "Rajdhani",sans-serif;text-align:left}
+.btn.f{flex:0 0 auto;text-align:center;border-color:var(--g);color:var(--g)}
+h2{font-size:13px;letter-spacing:3px;color:var(--m);margin:18px 2px 8px;text-transform:uppercase}
+.mod{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px}
+.mod div{flex:1}.mod b{display:block;font-size:16px}.mod small{color:var(--m);font-size:13px}
+.sw{width:46px;height:26px;border-radius:20px;background:#1a2733;position:relative;flex:none;transition:.25s;border:0}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#7b93a5;transition:.25s}
+.sw.on{background:#00ff9c33;box-shadow:0 0 10px #00ff9c55}.sw.on:after{left:23px;background:var(--g)}
+#log{height:110px;overflow:auto;background:#03060a;border:1px solid var(--line);border-radius:12px;padding:8px 10px;font:12px ui-monospace,Menlo,monospace;color:var(--g)}
+#log .e{color:var(--b)}
+.ov{position:fixed;inset:0;background:#05080df2;display:none;flex-direction:column;padding:max(14px,env(safe-area-inset-top)) 14px 14px;z-index:9;max-width:520px;margin:auto}
+.ov.s{display:flex}
+#cl{flex:1;overflow:auto;margin-top:10px}
+.ci{padding:12px;border-bottom:1px solid var(--line);display:flex;gap:10px;font-size:17px}
+.ci i{margin-left:auto;font:13px ui-monospace,monospace;color:var(--g);font-style:normal}
+#perm{align-items:center;justify-content:center;text-align:center;gap:14px}
+#perm img{width:92px;height:92px;border-radius:22px;border:1px solid var(--b);box-shadow:0 0 24px #00e5ff66}
+#perm p{color:var(--m);max-width:320px;margin:0;font-size:15px}
+#perm ul{text-align:left;color:var(--t);font-size:15px;padding-left:18px;margin:0}
+.go{background:var(--b);color:#00131a;border:0;border-radius:12px;padding:13px 28px;font:700 17px "Rajdhani",sans-serif;letter-spacing:1px;box-shadow:0 0 18px #00e5ff77}
+footer{text-align:center;color:#3f596b;font-size:11px;margin-top:14px}
+</style></head><body>
+<header><img src="logo.jpg" alt="" onerror="this.style.display='none'"><h1>ATTACK<b>VPN</b></h1><select id="lg" aria-label="Language"></select></header>
+
+<div class="pw"><button id="pbtn" aria-label="Power"><svg viewBox="0 0 24 24"><path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg><span id="pl"></span></button></div>
+
+<div class="grid">
+<div class="cell" id="c1"><small id="k1"></small><span id="v1">—</span></div>
+<div class="cell" id="c2"><small id="k2"></small><span id="v2">—</span></div>
+<div class="cell" id="c3"><small>IP</small><span id="v3">—</span></div>
+<div class="cell" id="c4"><small>Ping</small><span id="v4">— ms</span></div>
+</div>
+
+<div class="row"><button class="btn" id="cb"><small style="color:var(--m);display:block;font-size:12px" id="kc"></small><span id="cn"></span></button><button class="btn f" id="fb">⚡ <span id="kf"></span></button></div>
+
+<h2 id="km"></h2><div id="mods"></div>
+<h2>Terminal</h2><div id="log"></div>
+<footer>AttackVPN · local database only · no central logs</footer>
+
+<div class="ov" id="sheet"><input id="q" placeholder="Search…" style="max-width:none;width:100%;padding:12px"><div id="cl"></div></div>
+
+<div class="ov" id="perm"><img src="logo.jpg" alt="" onerror="this.style.display='none'"><h1>ATTACK<b>VPN</b></h1>
+<p>AttackVPN needs a few permissions to run:</p>
+<ul><li>VPN connection (system dialog)</li><li>Notifications (connection status)</li><li>Network access</li></ul>
+<button class="go" id="pg"></button></div>
+
+<script>
+const $=s=>document.querySelector(s),sl=ms=>new Promise(r=>setTimeout(r,ms));
+// name|connect|disconnect|connected|disconnected|connecting|fastest|modules|country|encrypted|allow
+const L={
+en:"English|Connect|Disconnect|Connected|Disconnected|Connecting…|Fastest server|Modules|Country|Encrypted|Allow permissions",
+az:"Azərbaycan|Qoşul|Ayır|Qoşuldu|Ayrıldı|Qoşulur…|Ən sürətli server|Modullar|Ölkə|Şifrələnib|İcazələr ver",
+tr:"Türkçe|Bağlan|Bağlantıyı kes|Bağlandı|Bağlı değil|Bağlanıyor…|En hızlı sunucu|Modüller|Ülke|Şifreli|İzinleri ver",
+ru:"Русский|Подключить|Отключить|Подключено|Отключено|Подключение…|Быстрейший сервер|Модули|Страна|Зашифровано|Разрешить доступ",
+de:"Deutsch|Verbinden|Trennen|Verbunden|Getrennt|Verbinde…|Schnellster Server|Module|Land|Verschlüsselt|Berechtigungen erteilen",
+fr:"Français|Connexion|Déconnexion|Connecté|Déconnecté|Connexion…|Serveur le plus rapide|Modules|Pays|Chiffré|Autoriser",
+es:"Español|Conectar|Desconectar|Conectado|Desconectado|Conectando…|Servidor más rápido|Módulos|País|Cifrado|Permitir permisos",
+it:"Italiano|Connetti|Disconnetti|Connesso|Disconnesso|Connessione…|Server più veloce|Moduli|Paese|Crittografato|Consenti permessi",
+pt:"Português|Conectar|Desconectar|Conectado|Desconectado|Conectando…|Servidor mais rápido|Módulos|País|Criptografado|Permitir permissões",
+nl:"Nederlands|Verbinden|Verbreken|Verbonden|Niet verbonden|Verbinden…|Snelste server|Modules|Land|Versleuteld|Toestemming geven",
+pl:"Polski|Połącz|Rozłącz|Połączono|Rozłączono|Łączenie…|Najszybszy serwer|Moduły|Kraj|Zaszyfrowane|Zezwól",
+uk:"Українська|Підключити|Відключити|Підключено|Відключено|Підключення…|Найшвидший сервер|Модулі|Країна|Зашифровано|Дозволити доступ",
+ar:"العربية|اتصال|قطع الاتصال|متصل|غير متصل|جارٍ الاتصال…|أسرع خادم|الوحدات|الدولة|مشفّر|السماح بالأذونات",
+fa:"فارسی|اتصال|قطع اتصال|متصل|قطع شده|در حال اتصال…|سریع‌ترین سرور|ماژول‌ها|کشور|رمزگذاری‌شده|اجازه دسترسی",
+hi:"हिन्दी|कनेक्ट|डिस्कनेक्ट|कनेक्टेड|डिस्कनेक्टेड|कनेक्ट हो रहा है…|सबसे तेज़ सर्वर|मॉड्यूल|देश|एन्क्रिप्टेड|अनुमति दें",
+zh:"中文|连接|断开|已连接|未连接|连接中…|最快服务器|模块|国家|已加密|允许权限",
+ja:"日本語|接続|切断|接続済み|未接続|接続中…|最速サーバー|モジュール|国|暗号化済み|権限を許可",
+ko:"한국어|연결|연결 해제|연결됨|연결 안 됨|연결 중…|가장 빠른 서버|모듈|국가|암호화됨|권한 허용",
+id:"Indonesia|Hubungkan|Putuskan|Terhubung|Terputus|Menghubungkan…|Server tercepat|Modul|Negara|Terenkripsi|Izinkan akses",
+vi:"Tiếng Việt|Kết nối|Ngắt kết nối|Đã kết nối|Đã ngắt|Đang kết nối…|Máy chủ nhanh nhất|Mô-đun|Quốc gia|Đã mã hóa|Cho phép quyền",
+th:"ไทย|เชื่อมต่อ|ตัดการเชื่อมต่อ|เชื่อมต่อแล้ว|ไม่ได้เชื่อมต่อ|กำลังเชื่อมต่อ…|เซิร์ฟเวอร์เร็วที่สุด|โมดูล|ประเทศ|เข้ารหัสแล้ว|อนุญาตสิทธิ์",
+sv:"Svenska|Anslut|Koppla från|Ansluten|Frånkopplad|Ansluter…|Snabbaste servern|Moduler|Land|Krypterad|Tillåt behörigheter",
+no:"Norsk|Koble til|Koble fra|Tilkoblet|Frakoblet|Kobler til…|Raskeste server|Moduler|Land|Kryptert|Tillat tilganger",
+da:"Dansk|Forbind|Afbryd|Forbundet|Afbrudt|Forbinder…|Hurtigste server|Moduler|Land|Krypteret|Tillad adgang",
+fi:"Suomi|Yhdistä|Katkaise|Yhdistetty|Ei yhteyttä|Yhdistetään…|Nopein palvelin|Moduulit|Maa|Salattu|Salli oikeudet",
+cs:"Čeština|Připojit|Odpojit|Připojeno|Odpojeno|Připojování…|Nejrychlejší server|Moduly|Země|Šifrováno|Povolit oprávnění",
+ro:"Română|Conectare|Deconectare|Conectat|Deconectat|Se conectează…|Cel mai rapid server|Module|Țară|Criptat|Permite accesul",
+hu:"Magyar|Csatlakozás|Leválasztás|Csatlakozva|Szétkapcsolva|Csatlakozás…|Leggyorsabb szerver|Modulok|Ország|Titkosítva|Engedélyek megadása",
+el:"Ελληνικά|Σύνδεση|Αποσύνδεση|Συνδέθηκε|Αποσυνδέθηκε|Σύνδεση…|Ταχύτερος διακομιστής|Λειτουργίες|Χώρα|Κρυπτογραφημένο|Να επιτραπούν",
+he:"עברית|התחבר|נתק|מחובר|מנותק|מתחבר…|השרת המהיר ביותר|מודולים|מדינה|מוצפן|אפשר הרשאות",
+bg:"Български|Свързване|Прекъсване|Свързан|Прекъснат|Свързване…|Най-бърз сървър|Модули|Държава|Криптирано|Разреши достъп",
+sr:"Srpski|Poveži|Prekini|Povezano|Prekinuto|Povezivanje…|Najbrži server|Moduli|Zemlja|Šifrovano|Dozvoli pristup",
+ka:"ქართული|დაკავშირება|გათიშვა|დაკავშირებულია|გათიშულია|უკავშირდება…|უსწრაფესი სერვერი|მოდულები|ქვეყანა|დაშიფრულია|ნებართვების დაშვება",
+kk:"Қазақша|Қосылу|Ажырату|Қосылды|Ажыратылды|Қосылуда…|Ең жылдам сервер|Модульдер|Ел|Шифрланған|Рұқсат беру",
+uz:"Oʻzbekcha|Ulanish|Uzish|Ulandi|Uzildi|Ulanmoqda…|Eng tez server|Modullar|Davlat|Shifrlangan|Ruxsat berish"};
+const RTL=["ar","fa","he"];
+const C="US:United States,GB:United Kingdom,DE:Germany,FR:France,NL:Netherlands,CA:Canada,AU:Australia,JP:Japan,SG:Singapore,SE:Sweden,CH:Switzerland,IT:Italy,ES:Spain,PT:Portugal,IE:Ireland,NO:Norway,DK:Denmark,FI:Finland,PL:Poland,CZ:Czechia,AT:Austria,BE:Belgium,LU:Luxembourg,HU:Hungary,RO:Romania,BG:Bulgaria,GR:Greece,TR:Türkiye,AZ:Azerbaijan,GE:Georgia,AM:Armenia,KZ:Kazakhstan,UZ:Uzbekistan,UA:Ukraine,LT:Lithuania,LV:Latvia,EE:Estonia,IS:Iceland,RS:Serbia,HR:Croatia,SI:Slovenia,SK:Slovakia,MD:Moldova,AL:Albania,MK:North Macedonia,BA:Bosnia,ME:Montenegro,CY:Cyprus,MT:Malta,IL:Israel,AE:UAE,SA:Saudi Arabia,QA:Qatar,KW:Kuwait,BH:Bahrain,OM:Oman,JO:Jordan,LB:Lebanon,EG:Egypt,MA:Morocco,DZ:Algeria,TN:Tunisia,ZA:South Africa,NG:Nigeria,KE:Kenya,GH:Ghana,IN:India,PK:Pakistan,BD:Bangladesh,LK:Sri Lanka,NP:Nepal,TH:Thailand,VN:Vietnam,MY:Malaysia,ID:Indonesia,PH:Philippines,KR:South Korea,HK:Hong Kong,TW:Taiwan,NZ:New Zealand,MX:Mexico,BR:Brazil,AR:Argentina,CL:Chile,CO:Colombia,PE:Peru,UY:Uruguay,PA:Panama,CR:Costa Rica,KG:Kyrgyzstan"
+.split(",").map(x=>{const[c,n]=x.split(":");return{c,n,p:18+[...c].reduce((a,h)=>a*31+h.charCodeAt(0),7)%150}});
+const fl=c=>[...c].map(h=>String.fromCodePoint(127397+h.charCodeAt(0))).join("");
+const MODS=[["anti","Anti-Detection Masking","Masks VPN signature from IP / data-center checks"],["hop","Multi-Hop / Dual-Route","Double-hop path scrambling"],["local","Local Device Tunneling","Zero central logs · data stays on device"],["ping","Ping Booster","Low-latency gaming mode (Roblox)"],["deep","Deep Time HTTPS Layering","Timezone simulation + multi-layer HTTPS"]];
+
+let S={lang:(navigator.language||"en").slice(0,2),cc:"AZ",mods:{anti:1,hop:0,local:1,ping:1,deep:0},perm:0};
+try{Object.assign(S,JSON.parse(localStorage.getItem("atk")||"{}"))}catch(e){}
+if(!L[S.lang])S.lang="en";
+const save=()=>{try{localStorage.setItem("atk",JSON.stringify(S))}catch(e){}};
+const T=i=>(L[S.lang]||L.en).split("|")[i];
+const cur=()=>C.find(x=>x.c===S.cc)||C[0];
+
+let st=0,sec=0,ping=0,ip="—",pt;
+function log(m,c){const l=$("#log"),d=document.createElement("div");d.textContent="> "+m;if(c)d.className=c;l.appendChild(d);while(l.children.length>40)l.firstChild.remove();l.scrollTop=1e9}
+
+function ui(){
+  document.documentElement.dir=RTL.includes(S.lang)?"rtl":"ltr";document.documentElement.lang=S.lang;
+  const b=$("#pbtn");b.className=st==2?"c":st==1?"w":"";
+  $("#pl").textContent=st==2?T(2):st==1?T(5):T(1);
+  $("#k1").textContent=st==2?T(3):T(4);$("#v1").textContent=st==2?"● ON":st==1?"…":"○ OFF";
+  $("#k2").textContent=T(9);$("#v2").textContent=st==2?"AES-256 ✓":"—";
+  $("#v3").textContent=st==2?ip:"—";$("#v4").textContent=st==2?ping+" ms":"— ms";
+  [1,2,3,4].forEach(i=>$("#c"+i).classList.toggle("on",st==2));
+  $("#kc").textContent=T(8);$("#cn").textContent=fl(cur().c)+" "+cur().n+" · ~"+cur().p+" ms";
+  $("#kf").textContent=T(6);$("#km").textContent=T(7);
+  $("#pg").textContent=T(10);
+}
+$("#km").textContent=T(8);
+
+function tick(){
+  sec++;const m=S.mods;
+  ping=Math.max(4,Math.round(cur().p*(m.ping?.6:1)+(m.hop?14:0)+(Math.random()*6-3)));
+  ui();
+}
+async function up(){
+  st=1;ui();const c=cur(),m=S.mods;
+  log("Local node DB → "+c.n,"e");await sl(450);
+  log("Handshake · AES-256-GCM");await sl(450);
+  if(m.hop){log("Route A → Route B (dual-hop)");await sl(400)}
+  if(m.anti){log("Anti-detection masking: ON");await sl(350)}
+  if(m.deep){log("Deep Time: virtual TZ + HTTPS ×3 layers");await sl(350)}
+  if(m.local)log("Local tunneling: zero central logs");
+  if(m.ping)log("Ping Booster: low-latency path");
+  ip="10."+(8+Math.random()*3|0)+"."+(Math.random()*250|0)+"."+(1+Math.random()*250|0);
+  st=2;sec=0;tick();pt=setInterval(tick,1000);log("SECURE ✓ "+c.n,"e");
+}
+function down(){clearInterval(pt);st=0;ui();log("Disconnected","e")}
+$("#pbtn").onclick=()=>{if(st==1)return;st?down():up()};
+
+// modules
+function drawMods(){
+  $("#mods").innerHTML=MODS.map(([k,n,d])=>`<div class="mod"><div><b>${n}</b><small>${d}</small></div><button class="sw ${S.mods[k]?"on":""}" data-k="${k}" aria-label="${n}"></button></div>`).join("");
+}
+$("#mods").onclick=e=>{const k=e.target.dataset.k;if(!k)return;S.mods[k]=S.mods[k]?0:1;save();drawMods();log(k+": "+(S.mods[k]?"ON":"OFF"));if(st==2)tick()};
+
+// countries
+function drawList(f=""){
+  $("#cl").innerHTML=C.filter(x=>x.n.toLowerCase().includes(f.toLowerCase())).map(x=>`<div class="ci" data-c="${x.c}">${fl(x.c)} ${x.n}<i>${x.p} ms</i></div>`).join("");
+}
+$("#cb").onclick=()=>{$("#q").value="";drawList();$("#sheet").classList.add("s")};
+$("#q").oninput=e=>drawList(e.target.value);
+$("#cl").onclick=e=>{const el=e.target.closest(".ci");if(!el)return;S.cc=el.dataset.c;save();$("#sheet").classList.remove("s");ui();if(st==2){down();up()}};
+$("#fb").onclick=async()=>{
+  if(st==1)return;const b=[...C].sort((a,b)=>a.p-b.p)[0];S.cc=b.c;save();log("Fastest → "+b.n,"e");
+  if(st==2)down();ui();up();
+};
+
+// language
+$("#lg").innerHTML=Object.keys(L).map(k=>`<option value="${k}">${L[k].split("|")[0]}</option>`).join("");
+$("#lg").value=S.lang;
+$("#lg").onchange=e=>{S.lang=e.target.value;save();ui()};
+
+// permissions
+function perm(){
+  if(window.AndroidBridge&&AndroidBridge.requestPermissions){try{AndroidBridge.requestPermissions()}catch(e){}}
+  S.perm=1;save();$("#perm").classList.remove("s");log("Permissions requested","e");
+}
+$("#pg").onclick=perm;
+if(!S.perm)$("#perm").classList.add("s");
+
+drawMods();ui();log("AttackVPN ready · local DB loaded","e");
+</script></body></html>
