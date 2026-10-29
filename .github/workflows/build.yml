@@ -1,4 +1,4 @@
-name: AttackVPN Web Build & Release
+name: AttackVPN Auto Release
 
 on:
   push:
@@ -7,26 +7,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Validate Files
-        run: |
-          echo "Building AttackVPN Web Dashboard..."
-          if [ -f "index.html" ]; then
-            echo "index.html tapıldı, hər şey qaydasındadır!"
-          else
-            echo "XƏTA: index.html tapılmadı!"
-            exit 1
-          fi
-
-      - name: Deploy / Artifact Save
-        uses: actions/upload-artifact@v4
+      - name: Create Release & Upload Assets
+        uses: softprops/action-gh-release@v2
         with:
-          name: attackvpn-dashboard
-          path: .
+          tag_name: v1.0.${{ github.run_number }}
+          name: "AttackVPN Release v1.0.${{ github.run_number }}"
+          body: "Avtomatik yaradılmış AttackVPN dashboard relizi. İçində 35 dil və Anti-Detection modulları mövcuddur."
+          files: |
+            index.html
+            logo.jpg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
